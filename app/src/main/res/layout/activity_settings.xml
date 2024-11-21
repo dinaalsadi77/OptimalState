@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:layout_marginTop="70dp"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/Settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="Settings"
+            android:textAlignment="center"
+            android:textStyle="bold"
+           />
+
+        <Button
+            android:id="@+id/ChangeUserSettings_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Change User Settings"
+            android:textColor="@color/black"
+            android:layout_marginTop="30dp"
+            android:textSize="20sp"
+            android:background="@drawable/edit_text_background"
+            />
+
+
+        <Button
+            android:id="@+id/SetCheckinNotifications_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set Check in Notifications"
+            android:textColor="@color/black"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+            android:background="@drawable/edit_text_background"
+            />
+
+        <Button
+            android:id="@+id/ShareWith_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Share With"
+            android:textColor="@color/black"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+            android:background="@drawable/edit_text_background"
+            />
+
+        <Button
+            android:id="@+id/Back_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:textColor="@color/black"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+            android:background="@drawable/edit_text_background"
+            />
+
+
+    </LinearLayout>
+</ScrollView>
