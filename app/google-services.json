@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "78122808897",
+    "firebase_url": "https://fir-setup-8e316-default-rtdb.firebaseio.com",
+    "project_id": "fir-setup-8e316",
+    "storage_bucket": "fir-setup-8e316.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78122808897:android:ba4f576733cf711e2938c0",
+        "android_client_info": {
+          "package_name": "com.example.firebasesetup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "78122808897-ilk8vn56ghosmss2kq16oqpfb38hhkai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTP4RWTFhXsTxKFzRLxBhWjKjc93AMWZQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "78122808897-ilk8vn56ghosmss2kq16oqpfb38hhkai.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
