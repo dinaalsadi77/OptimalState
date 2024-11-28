@@ -31,11 +31,16 @@ class ClientHomeActivity : AppCompatActivity() {
         val welcomeText = findViewById<TextView>(R.id.welcome)
         val history = findViewById<Button>(R.id.viewHistoryBtn)
         val settings = findViewById<Button>(R.id.settingsBtn)
+        val takeAssessment = findViewById<Button>(R.id.takeAssessmentBtn)
 
-        // Set the welcome text dynamically
         welcomeText.text = "Welcome $name"
 
-        // Logout functionality
+        takeAssessment.setOnClickListener{
+            val intent = Intent(this, AssesmentActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
         logout.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             val intent = Intent(this, LoginActivity::class.java)

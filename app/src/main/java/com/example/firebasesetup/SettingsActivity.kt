@@ -21,6 +21,20 @@ class SettingsActivity : AppCompatActivity() {
 
         val back = findViewById<Button>(R.id.Back_btn)
         val shareWith_btn = findViewById<Button>(R.id.ShareWith_btn)
+        val notifications_btn = findViewById<Button>(R.id.SetCheckinNotifications_btn)
+        val changeSettings_btn = findViewById<Button>(R.id.ChangeUserSettings_btn)
+
+        changeSettings_btn.setOnClickListener {
+            val intent = Intent(this, ChangeUserSettings_Activity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        notifications_btn.setOnClickListener {
+            val intent = Intent(this, notificationsActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         back.setOnClickListener {
             navigateToHomePage()

@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
     <application
         android:allowBackup="true"
@@ -16,16 +18,33 @@
         tools:ignore="ExtraText"
         tools:targetApi="31">
         <activity
+            android:name=".AssesmentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Breathing478Activity"
+            android:exported="false" />
+        <activity
+            android:name=".CalmBreathActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BreathingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".notificationsActivity"
+            android:exported="false" />
+        <activity
             android:name=".Assesment_Activity"
             android:exported="false" />
         <activity
             android:name=".AddClient_Activity"
             android:exported="false" />
+
+        <meta-data
+            android:name="com.google.android.youtube.api.key"
+            android:value="AIzaSyDk3ZyasdcX1mzbENYs6nMLASjbWQo5VIE" />
+
         <activity
             android:name=".ChangeUserSettings_Activity"
-            android:exported="false" />
-        <activity
-            android:name=".BreathingExercicesActivity"
             android:exported="false" />
         <activity
             android:name=".SettingsActivity"
@@ -35,9 +54,6 @@
             android:exported="false" />
         <activity
             android:name=".ExerciseActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AssesmentActivity"
             android:exported="false" />
         <activity
             android:name=".ClientHomeActivity"

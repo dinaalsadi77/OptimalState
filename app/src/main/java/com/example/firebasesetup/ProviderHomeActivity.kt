@@ -61,8 +61,6 @@ class ProviderHomeActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 val firstname = task.result?.child("firstName")?.value.toString()
                 if (firstname.isNotEmpty()) {
-                    // Use the first name for something if needed
-                    // For example, updating the welcome message
                     val welcomeText = findViewById<TextView>(R.id.welcome)
                     welcomeText.text = "Welcome $firstname"
                 }
