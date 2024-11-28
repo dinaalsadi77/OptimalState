@@ -147,7 +147,6 @@ class RegisterActivity : AppCompatActivity() {
                 dobEditText.setText(formattedDate)
             }, year, month, day)
 
-        // Set the maximum date to today's date
         datePickerDialog.datePicker.maxDate = maxDate
 
         datePickerDialog.show()

@@ -10,8 +10,6 @@
     <string name="logout">logout</string>
     <string name="spinner_prompt">Select an exercise</string>
 
-
-    <!-- Dropdown options for each section -->
     <string-array name="take_assessment_options">
         <item>Breathing Exercises</item>
         <item>Relaxation Techniques</item>
@@ -22,12 +20,6 @@
         <item>Exercise 1</item>
         <item>Exercise 2</item>
         <item>Exercise 3</item>
-    </string-array>
-
-    <string-array name="history_options">
-        <item>Past Sessions</item>
-        <item>Progress Over Time</item>
-        <item>Milestones</item>
     </string-array>
 
     <string-array name="settings_options">

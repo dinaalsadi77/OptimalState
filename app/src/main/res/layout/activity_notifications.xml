@@ -1,0 +1,33 @@
+<!-- res/layout/notification_setup.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_marginTop="70dp"
+        android:src="@drawable/logo"
+        />
+    <TextView
+        android:id="@+id/notification_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Notification Settings"
+        android:layout_marginTop="100dp"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <Switch
+        android:id="@+id/notification_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enable Notifications"
+        android:checked="true"
+        android:thumbTint="@color/blue"
+        android:trackTint="@color/light_blue"
+        android:layout_marginTop="20dp" />
+</LinearLayout>
