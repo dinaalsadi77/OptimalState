@@ -47,9 +47,10 @@ class RemoveClientActivity : AppCompatActivity() {
                 // Iterate over each user
                 for (userSnapshot in snapshot.children) {
                     val userId = userSnapshot.key ?: continue
-                    val userName = userSnapshot.child("name").getValue(String::class.java)
+                    val userFirstName = userSnapshot.child("FirstName").getValue(String::class.java)
+                    val userLastName =  userSnapshot.child("LastName").getValue(String::class.java)
 
-                    if (userName != null) {
+                    if (userFirstName != null && userLastName !=null) {
                         // Create a new table row
                         val tableRow = TableRow(this@RemoveClientActivity)
                         tableRow.layoutParams = TableRow.LayoutParams(
@@ -59,7 +60,7 @@ class RemoveClientActivity : AppCompatActivity() {
 
                         // Add name text view to the row
                         val nameTextView = TextView(this@RemoveClientActivity)
-                        nameTextView.text = userName
+                        nameTextView.text = "$userFirstName $userLastName"
                         nameTextView.setPadding(16, 16, 16, 16)
                         nameTextView.gravity = Gravity.CENTER
 
