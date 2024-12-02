@@ -25,6 +25,7 @@ class ProviderHomeActivity : AppCompatActivity() {
         val settings= findViewById<Button>(R.id.settingsBtn)
         val addClient=findViewById<Button>(R.id.addClients_btn)
         val removeClient=findViewById<Button>(R.id.removeClients)
+        val viewClient=findViewById<Button>(R.id.viewClients)
         auth = FirebaseAuth.getInstance()
         user = auth.currentUser!!
 
@@ -36,6 +37,11 @@ class ProviderHomeActivity : AppCompatActivity() {
         }
         removeClient.setOnClickListener{
             val intent=Intent(this,RemoveClientActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        viewClient.setOnClickListener {
+            val intent=Intent(this,ViewClients::class.java)
             startActivity(intent)
             finish()
         }
