@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:background="@android:color/white">
-
     <!-- Logo -->
     <ImageView
         android:id="@+id/logoImageView"
@@ -14,8 +13,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/logo"
         android:layout_gravity="center_horizontal"
-         android:contentDescription="Logo" />
-
+        android:contentDescription="Logo" />
     <!-- Title -->
     <TextView
         android:layout_width="match_parent"
@@ -25,7 +23,6 @@
         android:text="Current Clients"
         android:textSize="20sp"
         android:textStyle="bold" />
-
     <!-- Table Header -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,42 +31,12 @@
         android:orientation="horizontal"
         android:background="#F1E0B8"
         android:padding="8dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="Client"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Last update"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Time"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Status"
-            android:textStyle="bold" />
     </LinearLayout>
-
     <!-- Table Body -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-
         <TableLayout
             android:id="@+id/clientTable"
             android:layout_width="match_parent"
@@ -77,7 +44,6 @@
             android:stretchColumns="1, 2">
         </TableLayout>
     </ScrollView>
-
     <!-- Back Button -->
     <Button
         android:id="@+id/backButton"
