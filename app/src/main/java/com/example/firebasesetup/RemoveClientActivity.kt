@@ -1,9 +1,11 @@
 package com.example.firebasesetup
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.widget.Button
+import android.widget.RadioButton
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
@@ -12,99 +14,111 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.*
 
 class RemoveClientActivity : AppCompatActivity() {
-    private lateinit var database: DatabaseReference
+    private lateinit var clientTable: TableLayout
+    private lateinit var backButton: Button
+    private lateinit var confirmButton: Button
+    private lateinit var database: FirebaseDatabase
+    private lateinit var usersRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_remove_client)
 
-        // Initialize the database reference
-        database = FirebaseDatabase.getInstance().reference
+        clientTable = findViewById(R.id.clientTable)
+        backButton = findViewById(R.id.Back_btn)
+        confirmButton = findViewById(R.id.Confirm_btn)
 
-        // Fetch and display users in a table
-        fetchAndDisplayUsers()
+        // Initialize Firebase
+        database = FirebaseDatabase.getInstance()
+        usersRef = database.getReference("users")
+
+        populateClientTable()
+
+        backButton.setOnClickListener {
+            val intent = Intent(this, ProviderHomeActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        confirmButton.setOnClickListener {
+            deleteSelectedClients()
+        }
     }
 
-    private fun fetchAndDisplayUsers() {
-        val usersRef = database.child("users")
-        val tableLayout: TableLayout = findViewById(R.id.statusTable)
-
-        // Clear any existing rows except the header row
-        tableLayout.removeViews(1, tableLayout.childCount - 1)
-
-        // Listen for user data
-        usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+    private fun populateClientTable() {
+        usersRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                if (!snapshot.exists()) {
-                    Toast.makeText(
-                        this@RemoveClientActivity,
-                        "No users found in the database.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return
+                clientTable.removeAllViews()
+
+                // Add Header Row (this will not be processed by the loop later)
+                val headerRow = TableRow(this@RemoveClientActivity)
+                val nameHeader = TextView(this@RemoveClientActivity).apply {
+                    text = "Name"
+                    setPadding(8, 8, 8, 8)
+                    gravity = Gravity.CENTER
                 }
+                val removeHeader = TextView(this@RemoveClientActivity).apply {
+                    text = "Remove"
+                    setPadding(8, 8, 8, 8)
+                    gravity = Gravity.CENTER
+                }
+                headerRow.addView(nameHeader)
+                headerRow.addView(removeHeader)
+                clientTable.addView(headerRow)
 
-                // Iterate over each user
+                // Loop through the users from Firebase
                 for (userSnapshot in snapshot.children) {
-                    val userId = userSnapshot.key ?: continue
-                    val userFirstName = userSnapshot.child("FirstName").getValue(String::class.java)
-                    val userLastName =  userSnapshot.child("LastName").getValue(String::class.java)
+                    val userId = userSnapshot.key
+                    val clientName = userSnapshot.child("email").getValue(String::class.java)
+                    val userRole = userSnapshot.child("role").getValue(String::class.java)
 
-                    if (userFirstName != null && userLastName !=null) {
-                        // Create a new table row
-                        val tableRow = TableRow(this@RemoveClientActivity)
-                        tableRow.layoutParams = TableRow.LayoutParams(
-                            TableRow.LayoutParams.MATCH_PARENT,
-                            TableRow.LayoutParams.WRAP_CONTENT
-                        )
+                    // Create a new row for each client
+                    if (userRole == "Client") {
+                    val tableRow = TableRow(this@RemoveClientActivity)
 
-                        // Add name text view to the row
-                        val nameTextView = TextView(this@RemoveClientActivity)
-                        nameTextView.text = "$userFirstName $userLastName"
-                        nameTextView.setPadding(16, 16, 16, 16)
-                        nameTextView.gravity = Gravity.CENTER
-
-                        // Add remove button to the row
-                        val removeButton = Button(this@RemoveClientActivity)
-                        removeButton.text = "Remove"
-                        removeButton.setPadding(16, 16, 16, 16)
-                        removeButton.setOnClickListener {
-                            removeUser(userId, tableRow, tableLayout)
-                        }
-
-                        // Add views to the row
-                        tableRow.addView(nameTextView)
-                        tableRow.addView(removeButton)
-
-                        // Add the row to the table
-                        tableLayout.addView(tableRow)
+                    val clientNameText = TextView(this@RemoveClientActivity).apply {
+                        text = clientName
+                        setPadding(8, 8, 8, 8)
+                        gravity = Gravity.CENTER
                     }
+
+                    val radioButton = RadioButton(this@RemoveClientActivity).apply {
+                        setPadding(8, 8, 8, 8)
+                        setTag(userId)
+                    }
+
+                    tableRow.addView(clientNameText)
+                    tableRow.addView(radioButton)
+
+                    clientTable.addView(tableRow)
+                }
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@RemoveClientActivity, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
-                Log.e("RemoveClientActivity", "Firebase error: ${error.message}")
+                Toast.makeText(this@RemoveClientActivity, "Failed to load data", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    private fun removeUser(userId: String, tableRow: TableRow, tableLayout: TableLayout) {
-        // Reference to the user in the database
-        val userRef = database.child("users").child(userId)
+    private fun deleteSelectedClients() {
+        for (i in 1 until clientTable.childCount) {
+            val tableRow = clientTable.getChildAt(i) as TableRow
+            val radioButton = tableRow.getChildAt(1) as RadioButton
 
-        // Remove the user from Firebase
-        userRef.removeValue().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                // Remove the row from the table
-                tableLayout.removeView(tableRow)
-                Toast.makeText(this, "User removed successfully!", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Failed to remove user.", Toast.LENGTH_SHORT).show()
+            if (radioButton.isChecked) {
+                val userId = radioButton.tag as? String
+
+                if (userId != null) {
+                    usersRef.child(userId).removeValue().addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(this, "Client removed successfully", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, "Failed to remove client", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
-        }.addOnFailureListener { exception ->
-            Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
-            Log.e("RemoveClientActivity", "Error removing user: ${exception.message}")
         }
     }
 }
