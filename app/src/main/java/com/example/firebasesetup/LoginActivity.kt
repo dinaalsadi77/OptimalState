@@ -33,7 +33,6 @@ class LoginActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 val userRole = task.result?.child("role")?.value.toString()
                 if (userRole == "Provider") {
-                    // Redirect to Provider home page
                     val intent = Intent(this, ProviderHomeActivity::class.java)
                     startActivity(intent)
                     finish()

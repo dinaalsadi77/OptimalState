@@ -25,7 +25,6 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
         auth = FirebaseAuth.getInstance()
 
-        // Bind the views to their respective IDs
         val firstNameEditText = findViewById<EditText>(R.id.firstNameEditText)
         val lastNameEditText = findViewById<EditText>(R.id.lastNameEditText)
         dobEditText = findViewById<EditText>(R.id.dobEditText)
@@ -45,7 +44,6 @@ class RegisterActivity : AppCompatActivity() {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
 
-            // Check for empty fields
             if (TextUtils.isEmpty(firstName)) {
                 Toast.makeText(this, "Enter first name", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -71,23 +69,20 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Check if any radio button is selected
             val selectedProviderId = providerRadioGroup.checkedRadioButtonId
             val selectedProviderButton: RadioButton = findViewById(selectedProviderId)
 
-            // If no provider selected, show error
             if (selectedProviderId == -1) {
                 Toast.makeText(this, "Select provider option", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             val userRole = if (selectedProviderButton.id == R.id.providerYes) {
-                "Provider" // User selected "Yes"
+                "Provider"
             } else {
-                "Client" // User selected "No"
+                "Client"
             }
 
-            // After successfully creating the user, don't sign out immediately
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
@@ -104,7 +99,6 @@ class RegisterActivity : AppCompatActivity() {
                             "role" to userRole
                         )
 
-                        // Save user data after successful registration
                         userDatabaseRef.setValue(user)
                             .addOnSuccessListener {
                                 // Show success message only if data is saved successfully
@@ -142,7 +136,6 @@ class RegisterActivity : AppCompatActivity() {
 
         val datePickerDialog =
             DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-                // Format the selected date
                 val formattedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
                 dobEditText.setText(formattedDate)
             }, year, month, day)

@@ -57,7 +57,7 @@ class Breathing478Activity : AppCompatActivity() {
 
     private fun startHoldPhase() {
         tvPhase.text = "Hold"
-        startBreathAnimation(7_000, 1.0f) // Hold with no scaling
+        startBreathAnimation(7_000, 1.0f)
         handler.postDelayed({
             if (isPaused) return@postDelayed
             startExhalePhase()
@@ -66,7 +66,7 @@ class Breathing478Activity : AppCompatActivity() {
 
     private fun startExhalePhase() {
         tvPhase.text = "Exhale"
-        startBreathAnimation(8_000, 0.8f) // Outer circle shrinks
+        startBreathAnimation(8_000, 0.8f)
         handler.postDelayed({
             if (isPaused) return@postDelayed
             start478BreathingSequence() // Restart the cycle

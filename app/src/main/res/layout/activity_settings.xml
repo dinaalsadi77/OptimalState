@@ -71,7 +71,5 @@
             android:textSize="20sp"
             android:background="@drawable/edit_text_background"
             />
-
-
     </LinearLayout>
 </ScrollView>

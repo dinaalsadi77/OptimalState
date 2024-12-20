@@ -2,11 +2,14 @@ package com.example.firebasesetup
 
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.TableLayout
 import android.widget.TableRow
@@ -27,7 +30,12 @@ import java.util.Locale
 class ViewClients : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var clientTable: TableLayout
-
+    private val statusColorMap = mapOf(
+        "gold" to Pair(0xFFFFD700.toInt(), "Gold"),
+        "red" to Pair(Color.RED, "Red"),
+        "blue" to Pair(Color.BLUE, "Blue"),
+        "white" to Pair(Color.WHITE, "White")
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -46,41 +54,30 @@ class ViewClients : AppCompatActivity() {
         }
     }
 
-
-
     private fun fetchClientsData() {
         database.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                // Clear the table first (if refreshing)
                 clientTable.removeAllViews()
                 addHeaderRow()
 
-                // Check if snapshot is empty or not
                 if (!snapshot.exists()) {
                     Toast.makeText(this@ViewClients, "No data found", Toast.LENGTH_SHORT).show()
                     return
                 }
 
-                // Iterate through each user
                 for (userSnapshot in snapshot.children) {
                     val role = userSnapshot.child("role").getValue(String::class.java) ?: "unknown"
 
-                    // Filter: Only process users with role "client"
-                    if (role != "Client") {
-                        continue
-                    }
+                    if (role != "Client") continue
 
                     val firstName = userSnapshot.child("firstName").getValue(String::class.java) ?: "N/A"
                     val lastName = userSnapshot.child("lastName").getValue(String::class.java) ?: "N/A"
 
-                    // Get all status entries
                     val statusSnapshots = userSnapshot.child("status").children
-
                     var latestStatus: String = "none"
                     var latestTime: String = "N/A"
                     var latestTimestamp: Long = Long.MIN_VALUE
 
-                    // Loop through status entries and find the most recent one based on time
                     for (statusSnapshot in statusSnapshots) {
                         val status = statusSnapshot.child("status").getValue(String::class.java) ?: "none"
                         val statusTime = statusSnapshot.child("time").getValue(String::class.java) ?: "N/A"
@@ -100,15 +97,10 @@ class ViewClients : AppCompatActivity() {
                     }
 
                     val (datePart, timePart) = latestTime.split(" ", limit = 2).let { parts ->
-                        if (parts.size == 2) {
-                            Pair(parts[0], parts[1])
-                        } else {
-                            Pair("N/A", "N/A")
-                        }
+                        if (parts.size == 2) Pair(parts[0], parts[1]) else Pair("N/A", "N/A")
                     }
 
-
-                    addClientRow("$firstName $lastName", datePart, timePart, latestStatus)
+                    addClientRow("$firstName $lastName", datePart, timePart, latestStatus, userSnapshot.key ?: "")
                 }
             }
 
@@ -127,7 +119,7 @@ class ViewClients : AppCompatActivity() {
         for (header in headers) {
             val headerText = TextView(this).apply {
                 text = header
-                setPadding(16, 16, 16, 16)
+                setPadding(8, 8, 8, 8)
                 gravity = Gravity.CENTER
             }
             headerRow.addView(headerText)
@@ -135,7 +127,7 @@ class ViewClients : AppCompatActivity() {
         clientTable.addView(headerRow)
     }
 
-    private fun addClientRow(name: String, date: String, time: String, status: String) {
+    private fun addClientRow(name: String, date: String, time: String, status: String, userId: String) {
         val row = TableRow(this)
 
         val nameView = TextView(this).apply {
@@ -144,11 +136,34 @@ class ViewClients : AppCompatActivity() {
             gravity = Gravity.START
         }
 
-        val statusView = TextView(this).apply {
-            text = status
+        val statusLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
             setPadding(8, 8, 8, 8)
-            gravity = Gravity.CENTER
         }
+
+        val (color) = getColorForStatus(status)
+        val border = GradientDrawable().apply {
+            setColor(color)
+            setStroke(4, Color.BLACK)
+        }
+
+        val colorBox = View(this).apply {
+            layoutParams = LinearLayout.LayoutParams(60, 60).apply {
+                setPadding(0, 8, 0, 8)
+                gravity = Gravity.CENTER
+
+            }
+            background = border
+        }
+
+        statusLayout.addView(colorBox)
+
+//        val statusTextView = TextView(this).apply {
+//            text = "($colorName)"
+//            setPadding(4, 4, 4, 4)
+//            gravity = Gravity.CENTER
+//        }
+//        statusLayout.addView(statusTextView)
 
         val dateView = TextView(this).apply {
             text = date
@@ -163,13 +178,22 @@ class ViewClients : AppCompatActivity() {
         }
 
         row.addView(nameView)
-        row.addView(statusView)
+        row.addView(statusLayout)
         row.addView(dateView)
         row.addView(timeView)
 
+        row.setOnClickListener {
+            val intent = Intent(this, HistoryActivity::class.java).apply {
+                putExtra("userId", userId)
+            }
+            startActivity(intent)
+        }
+
         clientTable.addView(row)
     }
+
+    private fun getColorForStatus(status: String): Pair<Int, String> {
+        val statusLower = status.lowercase()
+        return statusColorMap[statusLower] ?: Pair(Color.GRAY, "None")
+    }
 }
-
-
-

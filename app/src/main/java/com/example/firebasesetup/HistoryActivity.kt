@@ -1,7 +1,9 @@
 package com.example.firebasesetup
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -33,6 +35,10 @@ class HistoryActivity : AppCompatActivity() {
             finish()
             return
         }
+
+        val selectedUserId = intent.getStringExtra("userId")
+        val userId = selectedUserId ?: currentUser.uid
+
 
         val calendar = Calendar.getInstance()
         val todayDay = calendar.get(Calendar.DAY_OF_MONTH)
@@ -79,25 +85,46 @@ class HistoryActivity : AppCompatActivity() {
             val selectedDate = "$selectedYear-$selectedMonth-$selectedDay"
 
             resultTextView.text = "Fetching data..."
-            fetchData(currentUser.uid, selectedDate, resultTextView)
+            fetchData(userId, selectedDate, resultTextView)
         }
     }
+
+    private val statusColorMap = mapOf(
+        "gold" to Pair(0xFFFFD700.toInt(), "Gold"),
+        "red" to Pair(android.graphics.Color.RED, "Red"),
+        "blue" to Pair(android.graphics.Color.BLUE, "Blue"),
+        "white" to Pair(android.graphics.Color.WHITE, "White")
+    )
 
     private fun fetchData(userId: String, date: String, resultTextView: TextView) {
         val statusRef = database.child("users").child(userId).child("status")
         val tableLayout: TableLayout = findViewById(R.id.statusTable)
 
+        // Clear existing rows except the header
         tableLayout.removeViews(1, tableLayout.childCount - 1)
 
         statusRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                var statusFound = false
+                val statusesByTime = mutableMapOf<String, MutableList<String>>()
 
                 for (statusSnapshot in snapshot.children) {
                     val time = statusSnapshot.child("time").getValue(String::class.java)
                     val status = statusSnapshot.child("status").getValue(String::class.java)
 
                     if (time != null && status != null && time.startsWith(date)) {
+                        val timePart = time.split(" ")[1].split(":")
+                        val formattedTime = "${timePart[0]}:${timePart[1]}"
+
+                        statusesByTime.computeIfAbsent(formattedTime) { mutableListOf() }.add(status) // Group statuses
+                    }
+                }
+
+                // Add grouped statuses to the table
+                if (statusesByTime.isEmpty()) {
+                    resultTextView.text = "No status found for $date"
+                } else {
+                    resultTextView.text = "Statuses for $date:"
+                    for ((time, statuses) in statusesByTime) {
                         val tableRow = TableRow(this@HistoryActivity)
                         tableRow.layoutParams = TableRow.LayoutParams(
                             TableRow.LayoutParams.MATCH_PARENT,
@@ -108,23 +135,42 @@ class HistoryActivity : AppCompatActivity() {
                         timeTextView.text = time
                         timeTextView.setPadding(8, 8, 8, 8)
 
-                        val statusTextView = TextView(this@HistoryActivity)
-                        statusTextView.text = status
-                        statusTextView.setPadding(8, 8, 8, 8)
+                        val statusLayout = LinearLayout(this@HistoryActivity)
+                        statusLayout.orientation = LinearLayout.HORIZONTAL
+                        statusLayout.setPadding(8, 8, 8, 8)
+
+                        // Process each status and its colors
+                        statuses.forEach { status ->
+                            val (color, colorName) = getColorForStatus(status)
+
+                            // Border for the colorBox
+                            val border = GradientDrawable().apply {
+                                setColor(color)
+                                setStroke(4, android.graphics.Color.BLACK)
+                                cornerRadius = 8f
+                            }
+
+                            val colorBoxContainer = View(this@HistoryActivity).apply {
+                                layoutParams = LinearLayout.LayoutParams(60, 60).apply {
+                                    setMargins(8, 0, 8, 0)
+                                }
+                                background = border
+                            }
+
+                            statusLayout.addView(colorBoxContainer)
+
+                            // Display the (ColorName)
+                            val statusTextView = TextView(this@HistoryActivity).apply {
+                                text = "($colorName)"
+                                setPadding(8, 0, 8, 0)
+                            }
+                            statusLayout.addView(statusTextView)
+                        }
 
                         tableRow.addView(timeTextView)
-                        tableRow.addView(statusTextView)
-
+                        tableRow.addView(statusLayout)
                         tableLayout.addView(tableRow)
-
-                        statusFound = true
                     }
-                }
-
-                if (!statusFound) {
-                    resultTextView.text = "No status found for $date"
-                } else {
-                    resultTextView.text = "Statuses for $date:"
                 }
             }
 
@@ -134,5 +180,11 @@ class HistoryActivity : AppCompatActivity() {
                 Log.e("HistoryActivity", "Firebase error: ${error.message}")
             }
         })
+    }
+
+    // Get both color and name from the status map
+    private fun getColorForStatus(status: String): Pair<Int, String> {
+        val statusLower = status.lowercase()
+        return statusColorMap[statusLower] ?: Pair(android.graphics.Color.GRAY, "Unknown")
     }
 }

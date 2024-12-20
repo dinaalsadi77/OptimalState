@@ -4,7 +4,6 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
-import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -80,11 +79,25 @@ class ChangeUserSettings_Activity : AppCompatActivity() {
     private fun saveProfileChanges(uid: String) {
         val userDatabaseRef = FirebaseDatabase.getInstance().getReference("users").child(uid)
 
-        if (nameInput.text.toString().trim().isNotEmpty() && dobInput.text.toString().trim().isNotEmpty()) {
+        val fullName = nameInput.text.toString().trim()
+        val dob = dobInput.text.toString().trim()
+
+        if (fullName.isNotEmpty() && dob.isNotEmpty()) {
+            val nameParts = fullName.split(" ", limit = 2)
+            val firstName = nameParts.getOrNull(0) ?: ""
+            val lastName = nameParts.getOrNull(1) ?: ""
+
+            if (firstName.isEmpty()) {
+                Toast.makeText(this, "Please enter a valid first name.", Toast.LENGTH_SHORT).show()
+                return
+            }
+
             val updatedData = mapOf(
-                "firstName" to nameInput.text.toString().trim(),
-                "dob" to dobInput.text.toString().trim()
+                "firstName" to firstName,
+                "lastName" to lastName,
+                "dob" to dob
             )
+
             userDatabaseRef.updateChildren(updatedData).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show()
@@ -93,7 +106,7 @@ class ChangeUserSettings_Activity : AppCompatActivity() {
                 }
             }
         } else {
-            Toast.makeText(this, "Please fill in both fields", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
         }
 
         if (currentPasswordInput.text.toString().trim().isNotEmpty() && newPasswordInput.text.toString().trim().isNotEmpty()) {
@@ -133,19 +146,15 @@ class ChangeUserSettings_Activity : AppCompatActivity() {
         val currentPassword = currentPasswordInput.text.toString().trim()
 
         if (user != null && currentPassword.isNotEmpty()) {
-            // Reauthenticate the user with their current password
             val credential = EmailAuthProvider.getCredential(user.email ?: "", currentPassword)
 
             user.reauthenticate(credential).addOnCompleteListener { reAuthTask ->
                 if (reAuthTask.isSuccessful) {
-                    // Once reauthenticated, proceed with account deletion
                     val userId = user.uid
 
-                    // Delete user data from Firebase Realtime Database
                     val databaseRef = FirebaseDatabase.getInstance().getReference("users").child(userId)
                     databaseRef.removeValue().addOnCompleteListener { databaseDeleteTask ->
                         if (databaseDeleteTask.isSuccessful) {
-                            // After deleting data from database, delete the user from Authentication
                             user.delete().addOnCompleteListener { deleteTask ->
                                 if (deleteTask.isSuccessful) {
                                     Toast.makeText(this, "Account deleted successfully", Toast.LENGTH_SHORT).show()
@@ -160,7 +169,6 @@ class ChangeUserSettings_Activity : AppCompatActivity() {
                         }
                     }
                 } else {
-                    // If reauthentication fails, show an error
                     Toast.makeText(this, "Reauthentication failed. Please check your password.", Toast.LENGTH_SHORT).show()
                 }
             }

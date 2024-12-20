@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5">
 
-    <!-- Title -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
@@ -16,14 +15,12 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <!-- Circular Animation -->
     <RelativeLayout
         android:id="@+id/circleContainer"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_centerInParent="true">
 
-        <!-- Outer Circle -->
         <View
             android:id="@+id/outerCircle"
             android:layout_width="300dp"
@@ -31,7 +28,6 @@
             android:layout_centerInParent="true"
             android:background="@drawable/circle_outer" />
 
-        <!-- Timer and Phase Text -->
         <TextView
             android:id="@+id/tvPhase"
             android:layout_width="wrap_content"
@@ -43,7 +39,6 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <!-- Pause Button -->
     <Button
         android:id="@+id/btnPause"
         android:layout_width="wrap_content"
