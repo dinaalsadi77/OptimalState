@@ -5,7 +5,6 @@
     android:padding="16dp"
     android:gravity="center">
 
-    <!-- Logo -->
     <ImageView
         android:id="@+id/logo"
         android:layout_width="match_parent"
@@ -14,7 +13,6 @@
         android:src="@drawable/logo"
         android:contentDescription="Logo" />
 
-    <!-- Title -->
     <TextView
         android:id="@+id/titleText"
         android:layout_width="match_parent"
@@ -25,14 +23,12 @@
         android:gravity="center"
         android:layout_marginBottom="16dp" />
 
-    <!-- ScrollView for Table Layout -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginTop="16dp">
 
-        <!-- Table Layout -->
         <TableLayout
             android:id="@+id/clientTable"
             android:layout_width="match_parent"
@@ -42,7 +38,6 @@
             android:background="#FFFFFF"
             android:elevation="4dp">
 
-            <!-- Header Row -->
             <TableRow
                 android:background="#FF6200EE">
                 <TextView
@@ -63,13 +58,9 @@
                     android:padding="8dp"
                     android:gravity="center" />
             </TableRow>
-
-            <!-- Client rows will be dynamically added here -->
-
         </TableLayout>
     </ScrollView>
 
-    <!-- Bottom Buttons Layout -->
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -77,7 +68,6 @@
         android:gravity="center"
         android:layout_marginTop="16dp">
 
-        <!-- Back Button -->
         <Button
             android:id="@+id/Back_btn"
             android:layout_width="wrap_content"
@@ -85,12 +75,10 @@
             android:text="Back"
             android:layout_marginEnd="16dp" />
 
-        <!-- Confirm Button -->
         <Button
             android:id="@+id/Confirm_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Confirm" />
     </LinearLayout>
-
 </LinearLayout>

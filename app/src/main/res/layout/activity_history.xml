@@ -5,7 +5,6 @@
     android:padding="16dp"
     android:gravity="center">
 
-    <!-- Logo -->
     <ImageView
         android:id="@+id/logo"
         android:layout_width="match_parent"
@@ -13,7 +12,6 @@
         android:layout_marginTop="70dp"
         android:src="@drawable/logo" />
 
-    <!-- Title -->
     <TextView
         android:id="@+id/titleText"
         android:layout_width="match_parent"

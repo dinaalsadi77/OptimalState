@@ -11,7 +11,6 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-
 class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var button: Button
@@ -23,16 +22,20 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         FirebaseApp.initializeApp(this)
-        auth=FirebaseAuth.getInstance()
+
+        auth = FirebaseAuth.getInstance()
         button = findViewById(R.id.logout)
         textView = findViewById(R.id.user_details)
         user = auth.currentUser!!
 
-            button.setOnClickListener{
-                FirebaseAuth.getInstance().signOut()
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
+        textView.text = "User: ${user.email}"
+
+        button.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
         }
     }

@@ -42,8 +42,8 @@ android {
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.0.0"))
     implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-database")
-    implementation("com.google.firebase:firebase-firestore")
+    implementation(libs.firebase.functions.ktx)
+    implementation(libs.firebase.database.ktx)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -54,6 +54,11 @@ dependencies {
     implementation(files("src\\main\\libs\\YouTubeAndroidPlayerApi (2).jar"))
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.firebase.functions.ktx)
+    implementation(libs.firebase.database.ktx)
+    implementation(libs.volley)
+    implementation(libs.androidx.tools.core)
+    //implementation(libs.androidx.security.crypto.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
